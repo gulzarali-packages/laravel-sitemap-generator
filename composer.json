@@ -1,5 +1,5 @@
 {
-    "name": "gulzarali/laravel-sitemap-generator",
+    "name": "gulzarali/sitemap",
     "description": "Laravel package to create google sitemap in text formate.",
     "type": "library",
     "license": "MIT",
