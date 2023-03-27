@@ -14,9 +14,9 @@ $siteMap->add('/');
 $siteMap->add('/about-us');
 $siteMap->add('/contact-us');
 
-// optional: default = text. formate can be text/xml
-// optional: default = local. storage: local, public, s3 etc
-// optional: file name to render method
+// optional formate: can be text/xml. default = text
+// optional storage object:i-e storage: local, public, s3 ... default = local
+// optional file name. default = sitemap.xml
 $siteMap->formate('text')
         ->storage('local')
         ->render('sitemap.xml');
