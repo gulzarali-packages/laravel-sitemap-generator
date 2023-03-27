@@ -25,4 +25,7 @@ or
 $siteMap->render();
 ```
 
-Now you can access the sitemap from https://your-domain.com/sitemap.xml
+Now you can access the sitemap from: 
+```
+https://your-domain.com/sitemap.xml
+```
