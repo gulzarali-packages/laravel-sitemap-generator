@@ -1,6 +1,9 @@
 <?php
 namespace GulzarAli\SiteMap;
+use Illuminate\Support\Facades\Storage;
 use SimpleXMLElement;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class SiteMap{
     /**
@@ -21,7 +24,12 @@ class SiteMap{
     /**
      * @param string sitemap output formate xml/text
      */
-    private $formate = 'text'; 
+    private $formate = 'text';
+    
+    /**
+     * @param string File name
+     */
+    private $file_name = '';
 
     public function __construct($base_url='')
     {
@@ -45,6 +53,7 @@ class SiteMap{
     public function getUrls(){
         return $this->urls;
     }
+
     /**
      * Adding the url to urls array
      * @param string url path. i-e: /, /contact-us, /about-us..
@@ -91,16 +100,50 @@ class SiteMap{
         $this->formate = $formate;
         return $this;
     }
+
+    /**
+     * set file name
+     * @param string file-name.txt
+     */
+    public function fileName($file_name){
+        $this->file_name = $file_name;
+        return $this;
+    }
+    public function resetFileName(){
+        $this->file_name = '';
+        return $this;
+    }
+
     /**
      * Render the sitemap
      * @param string file name: sitemap.txt
      */
-    public function render($file_name=''){
-        if(empty($file_name)){
-            $file_name = $this->getFileName();
+    public function render(){
+        
+        if(empty($this->file_name)){
+            $this->setDefaultFileName();
         }
+        Log::info('rendering: '.$this->file_name);
         $data = $this->getFileContents();
-        Storage::disk($this->storage)->put($file_name, $data);
+        Storage::disk($this->storage)->put($this->file_name, $data);
+        return $this;
+    }
+
+    public function getFileFullPath(){
+        return url($this->file_name);
+    }
+
+    /**
+     * submit the sitemap URL to google search engin for crawling
+     */
+    public function submitGoogle(){
+        $sitemapUrl = $this->getFileFullPath();
+        $client = new Client();
+        try {
+            $client->post('https://www.google.com/ping?sitemap=' . $sitemapUrl);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
         return $this;
     }
     
@@ -108,13 +151,14 @@ class SiteMap{
      * Set default file name if not provided by the client
      * @param string $this->format The file format to use ('text' or 'xml')
      */
-    private function getFileName(){
+    private function setDefaultFileName(){
         if($this->formate == 'text'){
-            return 'sitemap.txt';
+            $this->file_name = 'sitemap.txt';
         }
         else{
-            return 'sitemap.xml';
+            $this->file_name = 'sitemap.xml';
         }
+        return $this;
     }
     private function getFileContents(){
         if($this->formate == 'text'){
@@ -124,6 +168,7 @@ class SiteMap{
             return $this->getXmlFileContents();
         }
     }
+
     /**
      * Create xml object
      * @param array $this->urls
