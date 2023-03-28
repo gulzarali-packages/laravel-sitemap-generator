@@ -95,6 +95,7 @@ class SiteMap{
     /**
      * set the out formate of the sitemap
      * @param string $formate The file format to use ('text' or 'xml')
+     * @return object $this
      */
     public function formate($formate){
         $this->formate = $formate;
@@ -104,6 +105,7 @@ class SiteMap{
     /**
      * set file name
      * @param string file-name.txt
+     * @return object $this
      */
     public function fileName($file_name){
         $this->file_name = $file_name;
@@ -117,6 +119,7 @@ class SiteMap{
     /**
      * Render the sitemap
      * @param string file name: sitemap.txt
+     * @return object $this
      */
     public function render(){
         
@@ -129,12 +132,17 @@ class SiteMap{
         return $this;
     }
 
+    /**
+     * Sitemap file full path including the base_url
+     * @return string url: https://your-domain.com/sitemap.txt
+     */
     public function getFileFullPath(){
         return url($this->file_name);
     }
 
     /**
      * submit the sitemap URL to google search engin for crawling
+     * @return object $this
      */
     public function submitGoogle(){
         $sitemapUrl = $this->getFileFullPath();
@@ -150,6 +158,7 @@ class SiteMap{
     /**
      * Set default file name if not provided by the client
      * @param string $this->format The file format to use ('text' or 'xml')
+     * @return object $this
      */
     private function setDefaultFileName(){
         if($this->formate == 'text'){

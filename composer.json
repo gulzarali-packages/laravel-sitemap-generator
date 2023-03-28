@@ -14,5 +14,8 @@
             "email": "aligulzar375@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.0.2",
+        "guzzlehttp/guzzle": "^7.2"
+    }
 }
